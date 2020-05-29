@@ -19,24 +19,18 @@ impl Tuple {
         self.w == 0.0
     }
 
+    fn tuple(x: f64, y: f64, z: f64, w: f64) -> Tuple {
+        Tuple { x, y, z, w }
+    }
+
     // Should this be moved to the outer scope?
     fn point(x: f64, y: f64, z: f64) -> Tuple {
-        Tuple {
-            x: x,
-            y: y,
-            z: z,
-            w: 1.0,
-        }
+        Tuple::tuple(x, y, z, 1.0)
     }
 
     // Should this be moved to the outer scope?
     fn vector(x: f64, y: f64, z: f64) -> Tuple {
-        Tuple {
-            x: x,
-            y: y,
-            z: z,
-            w: 0.0,
-        }
+        Tuple::tuple(x, y, z, 0.0)
     }
 }
 
@@ -94,204 +88,49 @@ mod tests {
     use super::*;
 
     #[test]
-    fn should_hold_correct_x_value_in_point_tuple() {
-        let point = Tuple {
-            x: 4.3,
-            y: -4.2,
-            z: 3.1,
-            w: 1.0,
-        };
+    fn should_hold_correct_value_in_point_tuple() {
+        let point = Tuple::tuple(4.3, -4.2, 3.1, 1.0);
 
         assert_eq!(point.x, 4.3);
-    }
-
-    #[test]
-    fn should_hold_correct_y_value_in_point_tuple() {
-        let point = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.1,
-            w: 1.0,
-        };
-
-        assert_eq!(point.y, -4.3)
-    }
-
-    #[test]
-    fn should_hold_correct_z_value_in_point_tuple() {
-        let point = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.1,
-            w: 1.0,
-        };
-
+        assert_eq!(point.y, -4.2);
         assert_eq!(point.z, 3.1);
-    }
-
-    #[test]
-    fn should_hold_correct_w_value_in_point_tuple() {
-        let point = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.1,
-            w: 1.0,
-        };
-
         assert_eq!(point.w, 1.0);
+        assert!(point.is_point());
+        assert!(!point.is_vector());
     }
 
     #[test]
-    fn should_be_a_point_when_w_equal_to_1() {
-        let point = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.2,
-            w: 1.0,
-        };
-
-        assert!(point.is_point())
-    }
-
-    #[test]
-    fn should_not_be_a_vector_when_w_equal_to_1() {
-        let point = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.2,
-            w: 1.0,
-        };
-
-        assert!(!point.is_vector())
-    }
-
-    #[test]
-    fn should_hold_correct_x_value_in_vector_tuple() {
-        let vector = Tuple {
-            x: 4.3,
-            y: -4.2,
-            z: 3.1,
-            w: 1.0,
-        };
+    fn should_hold_correct_value_in_vector_tuple() {
+        let vector = Tuple::tuple(4.3, -4.2, 3.1, 0.0);
 
         assert_eq!(vector.x, 4.3);
-    }
-
-    #[test]
-    fn should_hold_correct_y_value_in_vector_tuple() {
-        let vector = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.1,
-            w: 1.0,
-        };
-
-        assert_eq!(vector.y, -4.3)
-    }
-
-    #[test]
-    fn should_hold_correct_z_value_in_vector_tuple() {
-        let vector = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.1,
-            w: 1.0,
-        };
-
+        assert_eq!(vector.y, -4.2);
         assert_eq!(vector.z, 3.1);
-    }
-
-    #[test]
-    fn should_hold_correct_w_value_in_vector_tuple() {
-        let vector = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.1,
-            w: 1.0,
-        };
-
-        assert_eq!(vector.w, 1.0);
-    }
-
-    #[test]
-    fn should_not_be_a_point_when_w_equal_to_0() {
-        let vector = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.2,
-            w: 0.0,
-        };
-
-        assert!(!vector.is_point())
-    }
-
-    #[test]
-    fn should_be_a_vector_when_w_equal_to_0() {
-        let vector = Tuple {
-            x: 4.3,
-            y: -4.3,
-            z: 3.2,
-            w: 0.0,
-        };
-
-        assert!(vector.is_vector())
+        assert_eq!(vector.w, 0.0);
+        assert!(!vector.is_point());
+        assert!(vector.is_vector());
     }
 
     #[test]
     fn should_return_a_tuple_with_w_equal_to_1() {
         let point = Tuple::point(4.0, -4.0, 3.0);
 
-        assert_eq!(
-            point,
-            Tuple {
-                x: 4.0,
-                y: -4.0,
-                z: 3.0,
-                w: 1.0
-            }
-        )
+        assert_eq!(point, Tuple::tuple(4.0, -4.0, 3.0, 1.0));
     }
 
     #[test]
     fn should_return_a_tuple_with_w_equal_to_0() {
-        let point = Tuple::vector(4.0, -4.0, 3.0);
+        let vector = Tuple::vector(4.0, -4.0, 3.0);
 
-        assert_eq!(
-            point,
-            Tuple {
-                x: 4.0,
-                y: -4.0,
-                z: 3.0,
-                w: 0.0
-            }
-        )
+        assert_eq!(vector, Tuple::tuple(4.0, -4.0, 3.0, 0.0));
     }
 
     #[test]
     fn should_return_the_correct_value_when_two_tuples_are_added() {
-        let a1 = Tuple {
-            x: 3.0,
-            y: -2.0,
-            z: 5.0,
-            w: 1.0,
-        };
+        let a1 = Tuple::tuple(3.0, -2.0, 5.0, 1.0);
+        let a2 = Tuple::tuple(-2.0, 3.0, 1.0, 0.0);
 
-        let a2 = Tuple {
-            x: -2.0,
-            y: 3.0,
-            z: 1.0,
-            w: 0.0,
-        };
-
-        assert_eq!(
-            a1 + a2,
-            Tuple {
-                x: 1.0,
-                y: 1.0,
-                z: 6.0,
-                w: 1.0,
-            }
-        )
+        assert_eq!(a1 + a2, Tuple::tuple(1.0, 1.0, 6.0, 1.0));
     }
 
     #[test]
@@ -328,21 +167,8 @@ mod tests {
 
     #[test]
     fn should_negate_a_tuple_correctly() {
-        let a = Tuple {
-            x: 1.0,
-            y: -2.0,
-            z: 3.0,
-            w: -4.0,
-        };
+        let a = Tuple::tuple(1.0, -2.0, 3.0, -4.0);
 
-        assert_eq!(
-            -a,
-            Tuple {
-                x: -1.0,
-                y: 2.0,
-                z: -3.0,
-                w: 4.0,
-            }
-        );
+        assert_eq!(-a, Tuple::tuple(-1.0, 2.0, -3.0, 4.0));
     }
 }
