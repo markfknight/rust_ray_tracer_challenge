@@ -1,6 +1,6 @@
 use crate::float_eq;
 
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 #[derive(Debug)]
 pub struct Tuple {
@@ -59,6 +59,19 @@ impl Add for Tuple {
             y: self.y + other.y,
             z: self.z + other.z,
             w: self.w + other.w,
+        }
+    }
+}
+
+impl Sub for Tuple {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z,
+            w: self.w - other.w,
         }
     }
 }
@@ -242,7 +255,7 @@ mod tests {
     }
 
     #[test]
-    fn should_return_the_correct_value_when_two_tuples_are_added_together() {
+    fn should_return_the_correct_value_when_two_tuples_are_added() {
         let a1 = Tuple {
             x: 3.0,
             y: -2.0,
@@ -258,5 +271,29 @@ mod tests {
         };
 
         assert_eq!(a1 + a2, Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 })
+    }
+
+    #[test]
+    fn should_return_the_correct_value_when_two_points_are_subtracted() {
+        let a1 = Tuple::point(3.0, 2.0, 1.0);
+        let a2 = Tuple::point(5.0, 6.0, 7.0);
+
+        assert_eq!(a1 - a2, Tuple::vector(-2.0, -4.0, -6.0))
+    }
+
+    #[test]
+    fn should_return_the_correct_value_when_a_point_is_subtracted_from_a_vector() {
+        let a1 = Tuple::point(3.0, 2.0, 1.0);
+        let a2 = Tuple::vector(5.0, 6.0, 7.0);
+
+        assert_eq!(a1 - a2, Tuple::point(-2.0, -4.0, -6.0))
+    }
+
+    #[test]
+    fn should_return_the_correct_value_when_two_vectors_are_subtracted() {
+        let a1 = Tuple::vector(3.0, 2.0, 1.0);
+        let a2 = Tuple::vector(5.0, 6.0, 7.0);
+
+        assert_eq!(a1 - a2, Tuple::vector(-2.0, -4.0, -6.0))
     }
 }
