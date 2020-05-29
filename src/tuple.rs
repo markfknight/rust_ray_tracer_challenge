@@ -1,5 +1,7 @@
 use crate::float_eq;
 
+use std::ops::Add;
+
 #[derive(Debug)]
 pub struct Tuple {
     pub x: f64,
@@ -38,12 +40,26 @@ impl Tuple {
     }
 }
 
+// Implemented as we are comparing floats, other wise we could have derived!
 impl PartialEq<Tuple> for Tuple {
     fn eq(&self, other: &Tuple) -> bool {
         float_eq(self.x, other.x)
             && float_eq(self.y, other.y)
             && float_eq(self.z, other.z)
             && float_eq(self.w, other.w)
+    }
+}
+
+impl Add for Tuple {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
+            w: self.w + other.w,
+        }
     }
 }
 
@@ -223,5 +239,24 @@ mod tests {
                 w: 0.0
             }
         )
+    }
+
+    #[test]
+    fn should_return_the_correct_value_when_two_tuples_are_added_together() {
+        let a1 = Tuple {
+            x: 3.0,
+            y: -2.0,
+            z: 5.0,
+            w: 1.0
+        };
+
+        let a2 = Tuple {
+            x: -2.0,
+            y: 3.0,
+            z: 1.0,
+            w: 0.0
+        };
+
+        assert_eq!(a1 + a2, Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 })
     }
 }
