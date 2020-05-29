@@ -1,6 +1,6 @@
 use crate::float_eq;
 
-use std::ops::{Add, Sub};
+use std::ops::{Add, Neg, Sub};
 
 #[derive(Debug)]
 pub struct Tuple {
@@ -72,6 +72,19 @@ impl Sub for Tuple {
             y: self.y - other.y,
             z: self.z - other.z,
             w: self.w - other.w,
+        }
+    }
+}
+
+impl Neg for Tuple {
+    type Output = Self;
+
+    fn neg(self) -> Self {
+        Self {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
+            w: -self.w,
         }
     }
 }
@@ -260,17 +273,25 @@ mod tests {
             x: 3.0,
             y: -2.0,
             z: 5.0,
-            w: 1.0
+            w: 1.0,
         };
 
         let a2 = Tuple {
             x: -2.0,
             y: 3.0,
             z: 1.0,
-            w: 0.0
+            w: 0.0,
         };
 
-        assert_eq!(a1 + a2, Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 })
+        assert_eq!(
+            a1 + a2,
+            Tuple {
+                x: 1.0,
+                y: 1.0,
+                z: 6.0,
+                w: 1.0,
+            }
+        )
     }
 
     #[test]
@@ -295,5 +316,33 @@ mod tests {
         let a2 = Tuple::vector(5.0, 6.0, 7.0);
 
         assert_eq!(a1 - a2, Tuple::vector(-2.0, -4.0, -6.0))
+    }
+
+    #[test]
+    fn should_return_correct_vector_when_a_vector_is_subtracted_from_a_zero_tuple() {
+        let zero = Tuple::vector(0.0, 0.0, 0.0);
+        let v = Tuple::vector(1.0, -2.0, 3.0);
+
+        assert_eq!(zero - v, Tuple::vector(-1.00, 2.0, -3.00));
+    }
+
+    #[test]
+    fn should_negate_a_tuple_correctly() {
+        let a = Tuple {
+            x: 1.0,
+            y: -2.0,
+            z: 3.0,
+            w: -4.0,
+        };
+
+        assert_eq!(
+            -a,
+            Tuple {
+                x: -1.0,
+                y: 2.0,
+                z: -3.0,
+                w: 4.0,
+            }
+        );
     }
 }
