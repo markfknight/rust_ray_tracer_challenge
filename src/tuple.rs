@@ -1,6 +1,6 @@
 use crate::float_eq;
 
-use std::ops::{Add, Neg, Sub};
+use std::ops::{Add, Mul, Neg, Sub};
 
 #[derive(Debug)]
 pub struct Tuple {
@@ -19,17 +19,27 @@ impl Tuple {
         self.w == 0.0
     }
 
-    fn tuple(x: f64, y: f64, z: f64, w: f64) -> Tuple {
-        Tuple { x, y, z, w }
+    pub fn tuple<X: Into<f64>, Y: Into<f64>, Z: Into<f64>, W: Into<f64>>(
+        x: X,
+        y: Y,
+        z: Z,
+        w: W,
+    ) -> Tuple {
+        Tuple {
+            x: x.into(),
+            y: y.into(),
+            z: z.into(),
+            w: w.into(),
+        }
     }
 
     // Should this be moved to the outer scope?
-    fn point(x: f64, y: f64, z: f64) -> Tuple {
+    pub fn point<X: Into<f64>, Y: Into<f64>, Z: Into<f64>>(x: X, y: Y, z: Z) -> Tuple {
         Tuple::tuple(x, y, z, 1.0)
     }
 
     // Should this be moved to the outer scope?
-    fn vector(x: f64, y: f64, z: f64) -> Tuple {
+    pub fn vector<X: Into<f64>, Y: Into<f64>, Z: Into<f64>>(x: X, y: Y, z: Z) -> Tuple {
         Tuple::tuple(x, y, z, 0.0)
     }
 }
@@ -47,7 +57,7 @@ impl PartialEq<Tuple> for Tuple {
 impl Add for Tuple {
     type Output = Self;
 
-    fn add(self, other: Self) -> Self {
+    fn add(self, other: Self) -> Self::Output {
         Self {
             x: self.x + other.x,
             y: self.y + other.y,
@@ -66,6 +76,19 @@ impl Sub for Tuple {
             y: self.y - other.y,
             z: self.z - other.z,
             w: self.w - other.w,
+        }
+    }
+}
+
+impl Mul<f64> for Tuple {
+    type Output = Self;
+
+    fn mul(self, rhs: f64) -> Self {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+            z: self.z * rhs,
+            w: self.w * rhs,
         }
     }
 }
@@ -170,5 +193,12 @@ mod tests {
         let a = Tuple::tuple(1.0, -2.0, 3.0, -4.0);
 
         assert_eq!(-a, Tuple::tuple(-1.0, 2.0, -3.0, 4.0));
+    }
+
+    #[test]
+    fn should_return_correct_tuple_when_multiplied_by_a_scalar() {
+        let a = Tuple::tuple(1.0, -2.0, 3.0, -4.0);
+
+        assert_eq!(a * 3.5, Tuple::tuple(3.5, -7.0, 10.5, -14.0))
     }
 }
